@@ -12,7 +12,7 @@ public class BusinessDayConventionTests
     [InlineData(BusinessDayConvention.Unadjusted)]
     public void Adjust_DateAlreadyBusinessDay_ReturnsUnchanged(BusinessDayConvention convention)
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var friday = new DateOnly(2026, 8, 7);
 
         Assert.Equal(friday, calendar.Adjust(friday, convention));
@@ -21,7 +21,7 @@ public class BusinessDayConventionTests
     [Fact]
     public void Adjust_Unadjusted_ReturnsWeekendDateUnchanged()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var saturday = new DateOnly(2026, 8, 8);
 
         Assert.Equal(saturday, calendar.Adjust(saturday, BusinessDayConvention.Unadjusted));
@@ -30,7 +30,7 @@ public class BusinessDayConventionTests
     [Fact]
     public void Adjust_Following_RollsWeekendForwardToMonday()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var saturday = new DateOnly(2026, 8, 8);
 
         var result = calendar.Adjust(saturday, BusinessDayConvention.Following);
@@ -41,7 +41,7 @@ public class BusinessDayConventionTests
     [Fact]
     public void Adjust_Preceding_RollsWeekendBackwardToFriday()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var sunday = new DateOnly(2026, 8, 9);
 
         var result = calendar.Adjust(sunday, BusinessDayConvention.Preceding);
@@ -53,7 +53,7 @@ public class BusinessDayConventionTests
     public void Adjust_ModifiedFollowing_StaysInSameMonthWhenNotCrossingMonthEnd()
     {
         var wednesdayHoliday = new DateOnly(2026, 8, 5);
-        var calendar = new BusinessCalendar(new[] { wednesdayHoliday });
+        var calendar = new BusinessDayCalendar(new[] { wednesdayHoliday });
 
         var following = calendar.Adjust(wednesdayHoliday, BusinessDayConvention.Following);
         var modifiedFollowing = calendar.Adjust(wednesdayHoliday, BusinessDayConvention.ModifiedFollowing);
@@ -65,7 +65,7 @@ public class BusinessDayConventionTests
     [Fact]
     public void Adjust_ModifiedFollowing_MonthEndSaturday_RollsBackInsteadOfCrossingIntoNextMonth()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var monthEndSaturday = new DateOnly(2026, 10, 31);
 
         var following = calendar.Adjust(monthEndSaturday, BusinessDayConvention.Following);
@@ -81,7 +81,7 @@ public class BusinessDayConventionTests
     public void Adjust_ModifiedPreceding_StaysInSameMonthWhenNotCrossingMonthStart()
     {
         var wednesdayHoliday = new DateOnly(2026, 8, 5);
-        var calendar = new BusinessCalendar(new[] { wednesdayHoliday });
+        var calendar = new BusinessDayCalendar(new[] { wednesdayHoliday });
 
         var preceding = calendar.Adjust(wednesdayHoliday, BusinessDayConvention.Preceding);
         var modifiedPreceding = calendar.Adjust(wednesdayHoliday, BusinessDayConvention.ModifiedPreceding);
@@ -93,7 +93,7 @@ public class BusinessDayConventionTests
     [Fact]
     public void Adjust_ModifiedPreceding_MonthStartSunday_RollsForwardInsteadOfCrossingIntoPreviousMonth()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var monthStartSunday = new DateOnly(2026, 11, 1);
 
         var preceding = calendar.Adjust(monthStartSunday, BusinessDayConvention.Preceding);
@@ -108,7 +108,7 @@ public class BusinessDayConventionTests
     [Fact]
     public void Adjust_InvalidConvention_Throws()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var saturday = new DateOnly(2026, 8, 8);
 
         Assert.Throws<ArgumentOutOfRangeException>(

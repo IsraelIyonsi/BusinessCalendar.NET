@@ -3,7 +3,7 @@ using BusinessCalendar;
 namespace BusinessCalendar.Tests;
 
 /// <summary>
-/// <see cref="BusinessCalendar.AddBusinessDays"/> follows the same
+/// <see cref="BusinessDayCalendar.AddBusinessDays"/> follows the same
 /// non-inclusive counting semantics as Excel's WORKDAY function: the start
 /// date is never counted, regardless of whether it is itself a business day.
 /// Oracle values below are taken from Microsoft's official WORKDAY function
@@ -38,7 +38,7 @@ public class AddBusinessDaysTests
     [MemberData(nameof(WorkdayOracleCases))]
     public void AddBusinessDays_MatchesWorkdayOracle(DateOnly start, int days, DateOnly[] holidays, DateOnly expected)
     {
-        var calendar = new BusinessCalendar(holidays);
+        var calendar = new BusinessDayCalendar(holidays);
 
         var result = calendar.AddBusinessDays(start, days);
 
@@ -48,7 +48,7 @@ public class AddBusinessDaysTests
     [Fact]
     public void AddBusinessDays_ZeroDays_ReturnsStartDateUnchanged()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var saturday = new DateOnly(2026, 8, 8);
 
         Assert.Equal(saturday, calendar.AddBusinessDays(saturday, 0));
@@ -57,7 +57,7 @@ public class AddBusinessDaysTests
     [Fact]
     public void AddBusinessDays_PositiveCount_StepsForwardSkippingWeekends()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var friday = new DateOnly(2026, 8, 7);
 
         var result = calendar.AddBusinessDays(friday, 1);
@@ -68,7 +68,7 @@ public class AddBusinessDaysTests
     [Fact]
     public void AddBusinessDays_NegativeCount_StepsBackwardSkippingWeekends()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var monday = new DateOnly(2026, 8, 10);
 
         var result = calendar.AddBusinessDays(monday, -1);
@@ -79,7 +79,7 @@ public class AddBusinessDaysTests
     [Fact]
     public void AddBusinessDays_StartOnWeekend_DoesNotCountStartDate()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var saturday = new DateOnly(2026, 8, 8);
 
         var result = calendar.AddBusinessDays(saturday, 1);
@@ -91,7 +91,7 @@ public class AddBusinessDaysTests
     public void AddBusinessDays_SkipsHolidaysAsWellAsWeekends()
     {
         var holiday = new DateOnly(2026, 8, 11);
-        var calendar = new BusinessCalendar(new[] { holiday });
+        var calendar = new BusinessDayCalendar(new[] { holiday });
         var friday = new DateOnly(2026, 8, 7);
 
         var result = calendar.AddBusinessDays(friday, 2);

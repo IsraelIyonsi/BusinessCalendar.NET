@@ -7,19 +7,19 @@ public class BusinessCalendarTests
     private static readonly DateOnly IndependenceDay2026 = new(2026, 7, 4);
     private static readonly DateOnly Thanksgiving2026 = new(2026, 11, 26);
 
-    private static BusinessCalendar CreateUsCalendar() =>
+    private static BusinessDayCalendar CreateUsCalendar() =>
         new(new[] { IndependenceDay2026, Thanksgiving2026 });
 
     [Fact]
     public void Constructor_NullHolidays_Throws()
     {
-        Assert.Throws<ArgumentNullException>(() => new BusinessCalendar(null!));
+        Assert.Throws<ArgumentNullException>(() => new BusinessDayCalendar(null!));
     }
 
     [Fact]
     public void Constructor_DuplicateHolidays_AreDeduplicated()
     {
-        var calendar = new BusinessCalendar(new[] { IndependenceDay2026, IndependenceDay2026 });
+        var calendar = new BusinessDayCalendar(new[] { IndependenceDay2026, IndependenceDay2026 });
 
         Assert.Single(calendar.Holidays);
     }
@@ -27,7 +27,7 @@ public class BusinessCalendarTests
     [Fact]
     public void Constructor_NoWeekendRule_DefaultsToSaturdaySunday()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
 
         Assert.Same(WeekendRule.SaturdaySunday, calendar.WeekendRule);
     }
@@ -35,7 +35,7 @@ public class BusinessCalendarTests
     [Fact]
     public void Constructor_ExplicitNullWeekendRule_DefaultsToSaturdaySunday()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>(), weekendRule: null);
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>(), weekendRule: null);
 
         Assert.Same(WeekendRule.SaturdaySunday, calendar.WeekendRule);
     }
@@ -144,7 +144,7 @@ public class BusinessCalendarTests
     [Fact]
     public void FridaySaturdayWeekend_TreatsThursdayAsLastBusinessDayOfWeek()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>(), WeekendRule.FridaySaturday);
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>(), WeekendRule.FridaySaturday);
         var thursday = new DateOnly(2026, 8, 6);
 
         Assert.True(calendar.IsBusinessDay(thursday));

@@ -3,7 +3,7 @@ using BusinessCalendar;
 namespace BusinessCalendar.Tests;
 
 /// <summary>
-/// <see cref="BusinessCalendar.BusinessDaysBetween"/> follows the same
+/// <see cref="BusinessDayCalendar.BusinessDaysBetween"/> follows the same
 /// inclusive-of-both-endpoints counting semantics as Excel's NETWORKDAYS
 /// function. Oracle values below are taken from Microsoft's official
 /// NETWORKDAYS function documentation,
@@ -33,7 +33,7 @@ public class BusinessDaysBetweenTests
     [MemberData(nameof(NetworkdaysOracleCases))]
     public void BusinessDaysBetween_MatchesNetworkdaysOracle(DateOnly start, DateOnly end, DateOnly[] holidays, int expected)
     {
-        var calendar = new BusinessCalendar(holidays);
+        var calendar = new BusinessDayCalendar(holidays);
 
         var result = calendar.BusinessDaysBetween(start, end);
 
@@ -43,7 +43,7 @@ public class BusinessDaysBetweenTests
     [Fact]
     public void BusinessDaysBetween_SameBusinessDay_ReturnsOne()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var friday = new DateOnly(2026, 8, 7);
 
         Assert.Equal(1, calendar.BusinessDaysBetween(friday, friday));
@@ -52,7 +52,7 @@ public class BusinessDaysBetweenTests
     [Fact]
     public void BusinessDaysBetween_SameWeekendDay_ReturnsZero()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var saturday = new DateOnly(2026, 8, 8);
 
         Assert.Equal(0, calendar.BusinessDaysBetween(saturday, saturday));
@@ -61,7 +61,7 @@ public class BusinessDaysBetweenTests
     [Fact]
     public void BusinessDaysBetween_FullWeek_CountsFiveWeekdays()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var monday = new DateOnly(2026, 8, 10);
         var sunday = monday.AddDays(6);
 
@@ -71,7 +71,7 @@ public class BusinessDaysBetweenTests
     [Fact]
     public void BusinessDaysBetween_ReversedRange_ReturnsNegativeOfForwardCount()
     {
-        var calendar = new BusinessCalendar(Array.Empty<DateOnly>());
+        var calendar = new BusinessDayCalendar(Array.Empty<DateOnly>());
         var monday = new DateOnly(2026, 8, 10);
         var sunday = monday.AddDays(6);
 

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-08-21
+
+### Changed
+
+- Renamed the primary calendar type from `BusinessCalendar` to `BusinessDayCalendar`. The type previously collided with the `BusinessCalendar` namespace, so a consumer writing `using BusinessCalendar;` then `new BusinessCalendar(...)` could not reach the class by simple name. The namespace is unchanged; only the class was renamed. All constructor, method, and property signatures are identical.
+
 ## [0.1.0] - 2026-08-12
 
 ### Added

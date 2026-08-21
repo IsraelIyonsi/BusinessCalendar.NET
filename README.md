@@ -24,7 +24,7 @@ var usHolidays = new[]
     new DateOnly(2026, 11, 26), // Thanksgiving
 };
 
-var calendar = new BusinessCalendar(usHolidays);
+var calendar = new BusinessDayCalendar(usHolidays);
 
 calendar.IsBusinessDay(new DateOnly(2026, 7, 4));      // false, holiday
 calendar.NextBusinessDay(new DateOnly(2026, 11, 25));  // 2026-11-27, skips Thanksgiving
@@ -36,7 +36,7 @@ calendar.AddBusinessDays(new DateOnly(2026, 8, 7), 3);  // steps 3 working days 
 ```csharp
 using BusinessCalendar;
 
-var calendar = new BusinessCalendar(usHolidays);
+var calendar = new BusinessDayCalendar(usHolidays);
 var tradeDate = new DateOnly(2026, 8, 10); // Monday
 
 var settlementDate = calendar.Settle(tradeDate, 2); // T+2, standard US equities settlement
@@ -48,7 +48,7 @@ var settlementDate = calendar.Settle(tradeDate, 2); // T+2, standard US equities
 ```csharp
 using BusinessCalendar;
 
-var calendar = new BusinessCalendar(usHolidays);
+var calendar = new BusinessDayCalendar(usHolidays);
 var scheduledCoupon = new DateOnly(2026, 10, 31); // falls on a Saturday
 
 // ISDA Modified Following: roll forward unless that crosses into the next
@@ -78,7 +78,7 @@ var accrualFraction = dayCounter.YearFraction(lastCoupon, paymentDate);
 
 **Business-day conventions** (`BusinessDayConvention`), matching the 2006 ISDA Definitions section 4.11: `Following`, `ModifiedFollowing`, `Preceding`, `ModifiedPreceding`, `Unadjusted`.
 
-**Day-count conventions** (`DayCounters`, an `IDayCounter` per convention), calendar-agnostic and independent of `BusinessCalendar`:
+**Day-count conventions** (`DayCounters`, an `IDayCounter` per convention), calendar-agnostic and independent of `BusinessDayCalendar`:
 
 | Convention | Use case |
 |---|---|
@@ -97,14 +97,14 @@ var fraction = DayCounters.Get(DayCountConvention.Actual365Fixed)
 
 ## Bring your own holidays
 
-`BusinessCalendar` takes an `IEnumerable<DateOnly>` of holiday dates in its constructor. Wire it up to whatever source fits your application:
+`BusinessDayCalendar` takes an `IEnumerable<DateOnly>` of holiday dates in its constructor. Wire it up to whatever source fits your application:
 
 ```csharp
 using BusinessCalendar;
 // using PublicHoliday; // a separate package that owns holiday data
 
 IEnumerable<DateOnly> holidays = LoadHolidaysFromWherever();
-var calendar = new BusinessCalendar(holidays, WeekendRule.FridaySaturday);
+var calendar = new BusinessDayCalendar(holidays, WeekendRule.FridaySaturday);
 ```
 
 ## Correctness

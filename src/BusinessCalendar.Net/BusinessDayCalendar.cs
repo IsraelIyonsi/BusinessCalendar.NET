@@ -9,12 +9,12 @@ namespace BusinessCalendar;
 /// holidays your application needs, for example from a package dedicated to
 /// holiday data, a database table, or a static list.
 /// </remarks>
-public sealed class BusinessCalendar
+public sealed class BusinessDayCalendar
 {
     private readonly HashSet<DateOnly> _holidays;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BusinessCalendar"/>
+    /// Initializes a new instance of the <see cref="BusinessDayCalendar"/>
     /// class.
     /// </summary>
     /// <param name="holidays">
@@ -28,7 +28,7 @@ public sealed class BusinessCalendar
     /// <exception cref="ArgumentNullException">
     /// <paramref name="holidays"/> is <see langword="null"/>.
     /// </exception>
-    public BusinessCalendar(IEnumerable<DateOnly> holidays, WeekendRule? weekendRule = null)
+    public BusinessDayCalendar(IEnumerable<DateOnly> holidays, WeekendRule? weekendRule = null)
     {
         ArgumentNullException.ThrowIfNull(holidays);
 
